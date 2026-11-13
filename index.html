@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070a11">
+<title>Cyber Leelawat | Cybersecurity Education & Training Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060911;
+  --bg-card:#0c111d;
+  --bg-card-hover:#101726;
+  --border:#172133;
+  --border-glow:rgba(45,212,191,0.45);
+  --text:#e2e8f0;
+  --muted:#7e8da4;
+  --cyan:#38bdf8;
+  --teal:#2dd4bf;
+  --mint:#5eead4;
+  --blue:#60a5fa;
+  --indigo:#6366f1;
+  --green:#4ade80;
+  --yellow:#facc15;
+  --red:#f87171;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background-color:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* Canvas particle network background */
+#cyberCanvas{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Subtle vertical & horizontal grid overlay matching screenshots */
+.bg-grid{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image:
+    linear-gradient(to right, rgba(45, 212, 191, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(45, 212, 191, 0.025) 1px, transparent 1px);
+  background-size:96px 96px;
+}
+
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+
+/* HEADER & NAVIGATION */
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:100;
+  background:rgba(6,9,17,0.88);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.nav-wrap{
+  max-width:1360px;
+  margin:0 auto;
+  padding:14px 40px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.logo{
+  font-family:'JetBrains Mono',monospace;
+  font-weight:700;
+  font-size:1.35rem;
+  color:#45b7c5;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  letter-spacing:-0.02em;
+}
+.logo svg{
+  width:18px;
+  height:18px;
+  color:#45b7c5;
+  filter:drop-shadow(0 0 8px rgba(69,183,197,0.5));
+}
+nav ul{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  list-style:none;
+}
+nav a{
+  font-size:0.84rem;
+  font-weight:500;
+  color:#cbd5e1;
+  padding:8px 16px;
+  border-radius:8px;
+  transition:all 0.2s ease;
+}
+nav a:hover{
+  color:#ffffff;
+  background:rgba(255,255,255,0.04);
+}
+nav a.active{
+  color:#5eead4;
+  background:#111c2d;
+  border:1px solid rgba(94,234,212,0.12);
+}
+
+.burger{
+  display:none;
+  background:none;
+  border:0;
+  padding:8px;
+  cursor:pointer;
+}
+.burger span{
+  display:block;
+  width:24px;
+  height:2px;
+  background:var(--teal);
+  border-radius:4px;
+  margin:5px 0;
+}
+
+/* MAIN LAYOUT */
+main{
+  position:relative;
+  z-index:1;
+  padding-top:68px;
+}
+.view{
+  display:none;
+  animation:fadeIn 0.3s ease;
+}
+.view.active{
+  display:block;
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.container{
+  max-width:1180px;
+  margin:0 auto;
+  padding:0 24px;
+}
+
+/* HERO SECTION */
+.hero{
+  min-height:calc(100vh - 68px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:40px 24px 80px;
+  position:relative;
+}
+.cert-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 20px;
+  border-radius:999px;
+  background:rgba(13,22,36,0.85);
+  border:1px solid rgba(94,234,212,0.18);
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.78rem;
+  color:#45b7c5;
+  box-shadow:0 0 25px rgba(45,212,191,0.06);
+  margin-bottom:32px;
+}
+.cert-pill .dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#45b7c5;
+  box-shadow:0 0 10px #45b7c5;
+}
+.hero h1{
+  font-size:clamp(2.3rem,5.2vw,4.15rem);
+  font-weight:800;
+  line-height:1.15;
+  letter-spacing:-0.03em;
+  max-width:960px;
+  margin:0 auto 24px;
+  background:linear-gradient(95deg,#e2e8f0 0%,#bae6fd 35%,#38bdf8 62%,#2dd4bf 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.hero .subtitle{
+  max-width:650px;
+  margin:0 auto 26px;
+  font-size:1.05rem;
+  line-height:1.65;
+  color:#8b9bb4;
+  font-weight:400;
+}
+.hero .tagline{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.86rem;
+  letter-spacing:0.16em;
+  color:#45b7c5;
+  margin-bottom:36px;
+}
+.hero-actions{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:14px 28px;
+  border-radius:10px;
+  font-size:0.82rem;
+  font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all 0.25s ease;
+  border:1px solid transparent;
+}
+.btn-hero-primary{
+  background:linear-gradient(90deg,#6488ea 0%,#5ac8d8 100%);
+  color:#ffffff;
+  box-shadow:0 0 28px rgba(90,200,216,0.35);
+}
+.btn-hero-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 38px rgba(90,200,216,0.55);
+  filter:brightness(1.06);
+}
+.btn-hero-outline{
+  background:rgba(12,18,30,0.75);
+  color:#cbd5e1;
+  border:1px solid rgba(148,163,184,0.22);
+}
+.btn-hero-outline:hover{
+  border-color:rgba(94,234,212,0.5);
+  color:#ffffff;
+  background:rgba(20,30,48,0.85);
+}
+
+/* SECTION HEADERS */
+.section-block{
+  padding:80px 0;
+}
+.section-header{
+  text-align:center;
+  margin-bottom:46px;
+}
+.section-header h2{
+  font-size:clamp(1.9rem,3.6vw,2.6rem);
+  font-weight:800;
+  letter-spacing:-0.02em;
+  margin-bottom:12px;
+  background:linear-gradient(90deg,#e2e8f0 0%,#7dd3fc 50%,#34d399 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.section-header p{
+  color:#7e8da4;
+  font-size:0.95rem;
+  max-width:640px;
+  margin:0 auto;
+}
+
+/* ABOUT US SECTION (Screenshot 2) */
+.about-card{
+  max-width:860px;
+  margin:0 auto;
+  background:rgba(13,18,29,0.92);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:42px 46px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,0.45);
+}
+.about-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:3px;
+  background:linear-gradient(90deg,#6366f1 0%,#38bdf8 50%,#2dd4bf 100%);
+}
+.about-card p{
+  color:#94a3b8;
+  font-size:0.95rem;
+  line-height:1.78;
+  margin-bottom:22px;
+}
+.about-card p:last-child{
+  margin-bottom:0;
+}
+.brand-highlight{
+  color:#45b7c5;
+  font-weight:600;
+}
+.iso-inline-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:3px 10px;
+  margin:0 4px;
+  border-radius:6px;
+  background:rgba(45,212,191,0.1);
+  border:1px solid rgba(45,212,191,0.22);
+  color:#45b7c5;
+  font-size:0.82rem;
+  font-weight:600;
+  vertical-align:baseline;
+}
+.about-card strong{
+  color:#e2e8f0;
+  font-weight:600;
+}
+
+/* WHY CHOOSE US (Screenshot 3) */
+.four-col-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:22px;
+  max-width:1080px;
+  margin:0 auto;
+}
+.feature-card{
+  background:rgba(12,17,28,0.88);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:14px;
+  padding:36px 24px;
+  text-align:center;
+  transition:all 0.3s ease;
+  position:relative;
+}
+.feature-card:hover{
+  background:rgba(16,23,37,0.96);
+  border-color:rgba(94,234,212,0.35);
+  box-shadow:0 0 32px rgba(45,212,191,0.14);
+  transform:translateY(-3px);
+}
+.feature-icon-box{
+  width:52px;
+  height:52px;
+  margin:0 auto 22px;
+  border-radius:12px;
+  background:rgba(45,212,191,0.08);
+  border:1px solid rgba(45,212,191,0.14);
+  display:grid;
+  place-items:center;
+  color:#45b7c5;
+  transition:all 0.3s ease;
+}
+.feature-card:hover .feature-icon-box{
+  background:rgba(45,212,191,0.14);
+  box-shadow:0 0 20px rgba(45,212,191,0.25);
+}
+.feature-card h3{
+  font-size:1.05rem;
+  font-weight:700;
+  color:#f1f5f9;
+  margin-bottom:12px;
+}
+.feature-card p{
+  font-size:0.82rem;
+  line-height:1.65;
+  color:#7e8da4;
+}
+
+/* OUR ACHIEVEMENTS (Screenshot 4) */
+.achievement-card{
+  background:rgba(12,17,28,0.88);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:14px;
+  padding:34px 22px;
+  text-align:center;
+  transition:all 0.3s ease;
+  position:relative;
+  overflow:hidden;
+}
+.achievement-card:hover{
+  background:rgba(16,23,37,0.96);
+  border-color:rgba(94,234,212,0.32);
+  box-shadow:0 0 30px rgba(45,212,191,0.12);
+}
+.achievement-card::after{
+  content:"";
+  position:absolute;
+  bottom:0;
+  left:12%;
+  right:12%;
+  height:2px;
+  background:linear-gradient(90deg,transparent,#38bdf8,#2dd4bf,transparent);
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+.achievement-card:hover::after{
+  opacity:1;
+}
+.ach-icon-box{
+  width:46px;
+  height:46px;
+  margin:0 auto 20px;
+  border-radius:10px;
+  background:rgba(45,212,191,0.08);
+  border:1px solid rgba(45,212,191,0.14);
+  display:grid;
+  place-items:center;
+  color:#45b7c5;
+}
+.ach-value{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.85rem;
+  font-weight:700;
+  line-height:1.2;
+  margin-bottom:10px;
+  background:linear-gradient(90deg,#7dd3fc 0%,#34d399 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.ach-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.55rem;
+  font-weight:700;
+  line-height:1.25;
+  margin-bottom:10px;
+  background:linear-gradient(90deg,#7dd3fc 0%,#34d399 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.achievement-card p{
+  font-size:0.8rem;
+  line-height:1.55;
+  color:#7e8da4;
+}
+
+/* STUDENT REVIEWS (Preserved from existing HTML) */
+.rating{text-align:center;margin:20px auto 40px}
+.rating strong{
+  display:block;
+  font:700 clamp(2.5rem,6vw,3.4rem) 'JetBrains Mono',monospace;
+  background:linear-gradient(90deg,#7dd3fc,#34d399);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.rating span{color:var(--muted);font-size:0.9rem}
+.reviews-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+  max-width:1080px;
+  margin:0 auto;
+}
+.review-card{
+  padding:26px;
+  background:rgba(12,17,28,0.9);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:14px;
+  transition:0.25s;
+}
+.review-card:hover{
+  border-color:rgba(94,234,212,0.3);
+}
+.review-head{display:flex;align-items:center;gap:13px;margin-bottom:12px}
+.avatar{
+  height:44px;
+  width:44px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#38bdf8,#14b8a6);
+  color:#060911;
+  font-weight:800;
+  font-size:0.9rem;
+}
+.review-card h3{font-size:1rem;color:#f1f5f9}
+.review-card small{color:#45b7c5;font-size:0.8rem}
+.stars{color:var(--yellow);letter-spacing:0.12em;margin:8px 0;font-size:0.9rem}
+.review-card p{color:#8b9bb4;font-size:0.88rem;line-height:1.6}
+
+.review-form{
+  max-width:620px;
+  margin:48px auto 0;
+  padding:32px;
+  background:rgba(12,17,28,0.92);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+}
+.review-form h3{text-align:center;font-size:1.3rem;margin-bottom:22px;color:#f1f5f9}
+label{
+  display:block;
+  text-align:left;
+  color:#8b9bb4;
+  font-size:0.75rem;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin:0 0 8px;
+}
+input,select{
+  width:100%;
+  padding:14px 16px;
+  margin-bottom:18px;
+  color:var(--text);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;
+  outline:none;
+  font:500 0.9rem 'JetBrains Mono',monospace;
+}
+input:focus,select:focus{
+  border-color:#45b7c5;
+  box-shadow:0 0 0 3px rgba(69,183,197,0.12);
+}
+select option{background:#0c111d;color:#e2e8f0}
+.review-form .btn{width:100%}
+
+/* COURSES VIEW (Matching Screenshot 5 + Preserving Existing Course Info) */
+.courses-view{
+  padding:50px 0 90px;
+}
+.courses-grid-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:26px;
+  max-width:1120px;
+  margin:0 auto 40px;
+}
+.course-box{
+  background:rgba(12,17,28,0.92);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:34px 28px;
+  display:flex;
+  flex-direction:column;
+  transition:all 0.3s ease;
+}
+.course-box:hover{
+  border-color:rgba(94,234,212,0.35);
+  box-shadow:0 0 35px rgba(45,212,191,0.14);
+  transform:translateY(-3px);
+}
+.course-icon-box{
+  width:48px;
+  height:48px;
+  border-radius:12px;
+  background:rgba(45,212,191,0.08);
+  border:1px solid rgba(45,212,191,0.14);
+  display:grid;
+  place-items:center;
+  color:#45b7c5;
+  margin-bottom:24px;
+}
+.course-box h3{
+  font-size:1.25rem;
+  font-weight:700;
+  line-height:1.35;
+  color:#f8fafc;
+  margin-bottom:14px;
+}
+.course-box p{
+  font-size:0.85rem;
+  line-height:1.65;
+  color:#8b9bb4;
+  margin-bottom:24px;
+  flex-grow:1;
+}
+.course-btn-group{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:flex-start;
+}
+.btn-course-green{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:11px 22px;
+  border-radius:8px;
+  background:#68d376;
+  color:#ffffff;
+  font-size:0.82rem;
+  font-weight:700;
+  box-shadow:0 0 22px rgba(104,211,118,0.45);
+  transition:0.2s;
+  border:0;
+  cursor:pointer;
+}
+.btn-course-green:hover{
+  filter:brightness(1.06);
+  box-shadow:0 0 28px rgba(104,211,118,0.65);
+}
+.btn-course-outline{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:11px 22px;
+  border-radius:8px;
+  background:transparent;
+  border:1px solid rgba(148,163,184,0.25);
+  color:#94a3b8;
+  font-size:0.82rem;
+  font-weight:500;
+  transition:0.2s;
+  cursor:pointer;
+}
+.btn-course-outline:hover{
+  border-color:#45b7c5;
+  color:#e2e8f0;
+}
+
+/* Existing Course Details Preserved */
+.preserved-courses{
+  max-width:1120px;
+  margin:30px auto 0;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:24px;
+}
+.course-detail-card{
+  background:rgba(12,17,28,0.92);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:30px;
+}
+.course-detail-card h3{
+  font-size:1.35rem;
+  margin:14px 0 10px;
+  color:#f1f5f9;
+}
+.course-detail-card p{
+  color:#8b9bb4;
+  font-size:0.92rem;
+}
+.topics{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:20px 0 24px;
+}
+.topics span{
+  font:500 0.78rem 'JetBrains Mono',monospace;
+  color:#45b7c5;
+  border:1px solid rgba(69,183,197,0.2);
+  background:rgba(69,183,197,0.06);
+  padding:6px 12px;
+  border-radius:99px;
+}
+
+/* CERTIFICATE VERIFICATION PORTAL (Screenshot 6) */
+.verify-view{
+  padding:50px 24px 90px;
+}
+.verify-portal-wrapper{
+  max-width:1060px;
+  margin:0 auto;
+  background:rgba(12,17,28,0.92);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:18px;
+  padding:34px 38px 54px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.5);
+}
+.verify-portal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom:32px;
+}
+.verify-portal-header h2{
+  font-size:1.45rem;
+  font-weight:700;
+  color:#f8fafc;
+}
+.secure-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 16px;
+  border-radius:999px;
+  background:rgba(20,30,46,0.9);
+  border:1px solid rgba(45,212,191,0.18);
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.74rem;
+  color:#45b7c5;
+}
+.verify-inner-stage{
+  position:relative;
+  border-radius:14px;
+  padding:46px 20px;
+  background:
+    radial-gradient(circle at 18% 82%, rgba(59,130,246,0.22), transparent 42%),
+    radial-gradient(circle at 75% 88%, rgba(74,222,128,0.2), transparent 42%),
+    #070a12;
+  border:1px solid rgba(255,255,255,0.04);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:420px;
+}
+.verify-modal-card{
+  width:100%;
+  max-width:440px;
+  background:rgba(24,28,38,0.88);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  padding:34px 30px;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,0.6);
+}
+.verify-check-circle{
+  width:56px;
+  height:56px;
+  margin:0 auto 18px;
+  border-radius:50%;
+  background:#ffffff;
+  color:#34d399;
+  display:grid;
+  place-items:center;
+  font-size:1.6rem;
+  font-weight:800;
+  box-shadow:0 0 0 8px rgba(255,255,255,0.06);
+}
+.verify-modal-card h3{
+  font-size:1.15rem;
+  font-weight:800;
+  letter-spacing:0.04em;
+  color:#ffffff;
+  text-transform:uppercase;
+}
+.verify-modal-card .powered{
+  font-size:0.65rem;
+  font-weight:700;
+  letter-spacing:0.16em;
+  color:#4ade80;
+  text-transform:uppercase;
+  margin:6px 0 24px;
+}
+.verify-input-box{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;
+  padding:10px 14px;
+  text-align:left;
+  margin-bottom:18px;
+  transition:border-color 0.2s;
+}
+.verify-input-box:focus-within{
+  border-color:#6488ea;
+}
+.verify-input-box label{
+  font-size:0.62rem;
+  letter-spacing:0.1em;
+  color:#94a3b8;
+  margin-bottom:4px;
+}
+.verify-input-box input{
+  background:transparent;
+  border:0;
+  padding:2px 0;
+  margin:0;
+  font-size:0.88rem;
+  color:#ffffff;
+  box-shadow:none;
+}
+.verify-input-box input:focus{
+  box-shadow:none;
+}
+.btn-verify-submit{
+  width:100%;
+  padding:13px 20px;
+  border-radius:10px;
+  border:0;
+  background:linear-gradient(90deg,#6488ea 0%,#7289da 100%);
+  color:#ffffff;
+  font-size:0.8rem;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:0 6px 24px rgba(100,136,234,0.35);
+  transition:0.2s;
+}
+.btn-verify-submit:hover{
+  filter:brightness(1.08);
+  box-shadow:0 8px 30px rgba(100,136,234,0.5);
+}
+
+.result{margin-top:20px;text-align:left}
+.success{
+  padding:12px;
+  border:1px solid rgba(74,222,128,0.5);
+  border-radius:10px;
+  background:rgba(74,222,128,0.1);
+  color:#4ade80;
+  text-align:center;
+  font-size:0.82rem;
+  font-weight:800;
+  letter-spacing:0.14em;
+  margin-bottom:12px;
+}
+.error{
+  padding:12px;
+  border:1px solid rgba(248,113,113,0.5);
+  border-radius:10px;
+  background:rgba(248,113,113,0.1);
+  color:#f87171;
+  text-align:center;
+  font-size:0.84rem;
+  font-weight:600;
+}
+.result-row{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:center;
+  padding:10px 14px;
+  margin-bottom:8px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:9px;
+}
+.result-row span{
+  color:#94a3b8;
+  font-size:0.7rem;
+  font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+.result-row b{
+  text-align:right;
+  font:600 0.82rem 'JetBrains Mono',monospace;
+  color:#f1f5f9;
+  overflow-wrap:anywhere;
+}
+
+/* PARTNERS & ABOUT VIEWS */
+.partners-placeholder{
+  max-width:860px;
+  margin:0 auto;
+  background:rgba(13,18,29,0.92);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;
+  padding:46px 36px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.partners-placeholder::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#6366f1 0%,#38bdf8 50%,#2dd4bf 100%);
+}
+.partners-placeholder p{
+  color:#94a3b8;
+  font-size:0.98rem;
+  max-width:580px;
+  margin:0 auto 24px;
+}
+
+/* FOOTER */
+footer{
+  position:relative;
+  z-index:1;
+  border-top:1px solid rgba(255,255,255,0.04);
+  text-align:center;
+  padding:32px 20px;
+  color:#64748b;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.78rem;
+  letter-spacing:0.04em;
+}
+
+/* RESPONSIVE */
+@media(max-width:980px){
+  .four-col-grid{grid-template-columns:repeat(2,1fr)}
+  .courses-grid-3{grid-template-columns:repeat(2,1fr)}
+  .reviews-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  .nav-wrap{padding:14px 20px}
+  .burger{display:block}
+  nav ul{
+    display:none;
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+    background:#090d18;
+    flex-direction:column;
+    align-items:stretch;
+    gap:4px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    padding:12px 20px;
+  }
+  nav ul.open{display:flex}
+  nav li a{display:block;padding:12px 16px}
+  .about-card{padding:28px 22px}
+  .four-col-grid,.courses-grid-3,.preserved-courses,.reviews-grid{grid-template-columns:1fr}
+  .verify-portal-wrapper{padding:24px 18px 34px}
+  .verify-modal-card{padding:26px 20px}
+  .result-row{flex-direction:column;align-items:flex-start;gap:4px}
+  .result-row b{text-align:left}
+  .hero-actions{flex-direction:column;width:100%;max-width:340px}
+  .hero-actions .btn{width:100%}
+}
+</style>
+</head>
+<body>
+
+<canvas id="cyberCanvas"></canvas>
+<div class="bg-grid"></div>
+
+<header>
+  <div class="nav-wrap">
+    <a class="logo" href="#home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <polygon points="12 2 22 12 12 22 2 12 12 2"></polygon>
+        <polygon points="12 7 17 12 12 17 7 12 12 7"></polygon>
+      </svg>
+      Cyber Leelawat
+    </a>
+    <button class="burger" id="menuButton" aria-label="Open navigation menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav>
+      <ul id="menu">
+        <li><a href="#home" data-view="home">Home</a></li>
+        <li><a href="#courses" data-view="courses">Courses</a></li>
+        <li><a href="#verify" data-view="verify">Verify Certificate</a></li>
+        <li><a href="#partners" data-view="partners">Partners</a></li>
+        <li><a href="#about" data-view="about">About Us</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HOME VIEW -->
+  <section class="view" id="view-home">
+    <!-- HERO SECTION -->
+    <div class="hero">
+      <div class="cert-pill">
+        <span class="dot"></span>
+        <span>ISO 9001:2015 Certified</span>
+      </div>
+      <h1>Empowering the Next Generation of Cyber Defenders</h1>
+      <p class="subtitle">Learn Ethical Hacking, Network Security &amp; more — from industry experts with real-world experience</p>
+      <p class="tagline">Zero Trust &nbsp;·&nbsp; Full Secure</p>
+      <div class="hero-actions">
+        <a class="btn btn-hero-primary" href="#courses">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13.13 22.19L11.5 18.36C13.07 17.78 14.54 17 15.9 16.09L13.13 22.19M5.64 12.5L1.81 10.87L7.91 8.1C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39C21.61 2.39 16.66 .269 11 5.93C8.81 8.12 7.5 10.53 6.65 12.64C6.37 13.39 6.56 14.21 7.11 14.77L9.24 16.89C9.79 17.45 10.61 17.63 11.36 17.35C13.5 16.53 15.88 15.19 18.07 13C23.73 7.34 21.61 2.39 21.61 2.39M14.54 9.46C13.76 8.68 13.76 7.41 14.54 6.63S16.59 5.85 17.37 6.63C18.14 7.41 18.15 8.68 17.37 9.46C16.59 10.24 15.32 10.24 14.54 9.46M8.88 16.53L7.47 15.12L8.88 16.53M6.24 22L9.88 18.36C9.54 18.27 9.21 18.12 8.91 17.91L4.83 22H6.24M2 22H3.41L8.18 17.24L6.76 15.83L2 20.59V22M2 19.17L6.09 15.09C5.88 14.79 5.73 14.47 5.64 14.12L2 17.76V19.17Z"/>
+          </svg>
+          EXPLORE COURSES
+        </a>
+        <a class="btn btn-hero-outline" href="#about">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+          CONTACT US
+        </a>
+      </div>
+    </div>
+
+    <!-- ABOUT US SECTION -->
+    <section class="section-block" id="home-about">
+      <div class="container">
+        <div class="section-header">
+          <h2>About Us</h2>
+          <p>Building a safer digital world through education and awareness</p>
+        </div>
+        <div class="about-card">
+          <p><span class="brand-highlight">Cyber Leelawat</span> is an <span class="iso-inline-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 2.4 3.4-.4.9 3.3 3 1.6-.9 3.3 1.9 2.8-2.6 2.2.3 3.4-3.3.7-1.4 3.1-3.2-1-3.2 1-1.4-3.1-3.3-.7.3-3.4-2.6-2.2 1.9-2.8-.9-3.3 3-1.6.9-3.3 3.4.4L12 2zm-1.2 13.5l5.2-5.2-1.4-1.4-3.8 3.8-1.8-1.8-1.4 1.4 3.2 3.2z"/></svg> ISO 9001:2015 Certified</span> cyber education platform dedicated to empowering rural and Hindi-speaking learners. We provide industry-relevant, practical cybersecurity training that bridges the gap between classroom theory and real-world defense.</p>
+          <p>From <strong>Ethical Hacking</strong> to <strong>Bug Bounty Bootcamp</strong>, our courses are designed by experts to provide hands-on experience through live projects and internship opportunities.</p>
+          <p>Our mission goes beyond education; we actively conduct <strong>Cyber Awareness Programs</strong> across schools and colleges to build a safer, more resilient digital society for everyone.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY CHOOSE US SECTION -->
+    <section class="section-block" id="why-choose-us">
+      <div class="container">
+        <div class="section-header">
+          <h2>Why Choose Us</h2>
+          <p>Industry-leading training with practical, hands-on approach</p>
+        </div>
+        <div class="four-col-grid">
+          <article class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h11.3c-.2-.63-.3-1.3-.3-2 0-1.48.54-2.83 1.43-3.88C15.16 14.04 13.48 14 12 14zm6.5 1l-3.5 1.5v2.5c0 2.15 1.49 4.16 3.5 4.7 2.01-.54 3.5-2.55 3.5-4.7v-2.5L18.5 15z"/>
+              </svg>
+            </div>
+            <h3>Expert Trainers</h3>
+            <p>Certified ethical hackers with real-world experience in penetration testing and security auditing.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 3v2H7c-1.1 0-2 .9-2 2v2H3v2h2v2H3v2h2v2c0 1.1.9 2 2 2h2v2h2v-2h2v2h2v-2h2c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2V9h-2V7c0-1.1-.9-2-2-2h-2V3h-2v2h-2V3H9zm0 6h6v6H9V9z"/>
+              </svg>
+            </div>
+            <h3>Hands-On Labs</h3>
+            <p>Practice in real hacking environments with live targets and simulated attack scenarios.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
+              </svg>
+            </div>
+            <h3>Placement Support</h3>
+            <p>Comprehensive resume building, interview preparation, and career guidance for every student.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l2.4 2.4 3.4-.4.9 3.3 3 1.6-.9 3.3 1.9 2.8-2.6 2.2.3 3.4-3.3.7-1.4 3.1-3.2-1-3.2 1-1.4-3.1-3.3-.7.3-3.4-2.6-2.2 1.9-2.8-.9-3.3 3-1.6.9-3.3 3.4.4L12 2z"/>
+              </svg>
+            </div>
+            <h3>Industry Certification</h3>
+            <p>ISO &amp; MSME recognized certificates that validate your skills in the global market.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- OUR ACHIEVEMENTS SECTION -->
+    <section class="section-block" id="achievements">
+      <div class="container">
+        <div class="section-header">
+          <h2>Our Achievements</h2>
+          <p>Numbers that reflect our commitment to excellence</p>
+        </div>
+        <div class="four-col-grid">
+          <article class="achievement-card">
+            <div class="ach-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16z"/>
+              </svg>
+            </div>
+            <div class="ach-value">10+</div>
+            <p>Internship Batches Completed</p>
+          </article>
+
+          <article class="achievement-card">
+            <div class="ach-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+              </svg>
+            </div>
+            <div class="ach-value">1000+</div>
+            <p>Students Successfully Trained</p>
+          </article>
+
+          <article class="achievement-card">
+            <div class="ach-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6zm6.5 7.5L8 11l2.5-2.5-1.06-1.06L5.88 11l3.56 3.56 1.06-1.06zm3 0l1.06 1.06L18.12 11l-3.56-3.56-1.06 1.06L16 11l-2.5 2.5z"/>
+              </svg>
+            </div>
+            <div class="ach-title">Real<br>Projects</div>
+            <p>Live Cybersecurity &amp; Ethical Hacking Projects</p>
+          </article>
+
+          <article class="achievement-card">
+            <div class="ach-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+              </svg>
+            </div>
+            <div class="ach-title">Industry<br>Ready</div>
+            <p>Practical Skills for Real-World Cyber Defense</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- STUDENT REVIEWS SECTION (Preserved from original HTML) -->
+    <section class="section-block" id="student-reviews">
+      <div class="container">
+        <div class="section-header">
+          <h2>Students Reviews</h2>
+          <p>Experiences shared by learners in the Cyber Leelawat community.</p>
+        </div>
+        <div class="rating">
+          <strong>★ 4.9 / 5</strong>
+          <span>Based on student feedback</span>
+        </div>
+        <div class="reviews-grid">
+          <article class="review-card">
+            <div class="review-head">
+              <div class="avatar">AA</div>
+              <div>
+                <h3>Md Afshar Alam</h3>
+                <small>Internship</small>
+              </div>
+            </div>
+            <div class="stars">★★★★★</div>
+            <p>The sessions helped me understand cybersecurity concepts in a practical way. I especially enjoyed the guided exercises and supportive environment.</p>
+          </article>
+
+          <article class="review-card">
+            <div class="review-head">
+              <div class="avatar">MS</div>
+              <div>
+                <h3>Md Saif</h3>
+                <small>Cybersecurity Training</small>
+              </div>
+            </div>
+            <div class="stars">★★★★★</div>
+            <p>A great learning experience. The topics were explained clearly, and the practical approach made it easier to understand how security works.</p>
+          </article>
+
+          <article class="review-card">
+            <div class="review-head">
+              <div class="avatar">NK</div>
+              <div>
+                <h3>Naveen Kumar</h3>
+                <small>Ethical Hacking</small>
+              </div>
+            </div>
+            <div class="stars">★★★★★</div>
+            <p>I learned a lot about responsible testing and common web vulnerabilities. The hands-on practice was the best part of the course.</p>
+          </article>
+        </div>
+
+        <form class="review-form" id="reviewForm">
+          <h3>✎ Share Your Experience</h3>
+          <label for="reviewName">Your Name</label>
+          <input id="reviewName" placeholder="Enter your name" required>
+          <label for="reviewCourse">Course / Program</label>
+          <select id="reviewCourse" required>
+            <option value="">Select a program</option>
+            <option>Ethical Hacking</option>
+            <option>Bug Bounty Bootcamp</option>
+            <option>Cybersecurity Internship</option>
+            <option>Cyber Awareness Program</option>
+          </select>
+          <label for="reviewText">Your Feedback</label>
+          <input id="reviewText" placeholder="Tell us about your experience" required>
+          <button class="btn btn-hero-primary" type="submit">Submit Feedback</button>
+          <p id="reviewMessage" style="margin:14px 0 0;font-size:0.88rem;color:#45b7c5;text-align:center"></p>
+        </form>
+      </div>
+    </section>
+  </section>
+
+  <!-- COURSES VIEW -->
+  <section class="view courses-view" id="view-courses">
+    <div class="container">
+      <div class="section-header">
+        <h2>Our Courses</h2>
+        <p>Practical learning paths designed to develop real cybersecurity skills and certifications.</p>
+      </div>
+
+      <!-- 3-Column Cards matching Screenshot 5 -->
+      <div class="courses-grid-3">
+        <article class="course-box">
+          <div class="course-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1 14H9v-2h2v2zm0-4H9V7h2v5zm4 4h-2v-2h2v2zm0-4h-2V7h2v5z"/>
+            </svg>
+          </div>
+          <h3>Cyber Leelawat Cyber Security Internship Program (CL|CSIP)</h3>
+          <p>Weekend live classes with hands-on cybersecurity training and MSME &amp; ISO certificate.</p>
+          <div class="course-btn-group">
+            <button type="button" class="btn-course-green" onclick="alert('Admissions for CL|CSIP will open soon!')">coming soon</button>
+            <button type="button" class="btn-course-outline" onclick="alert('Brochure download will be available shortly.')">Download Brochure</button>
+          </div>
+        </article>
+
+        <article class="course-box">
+          <div class="course-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
+            </svg>
+          </div>
+          <h3>Cyber Leelawat Bug Bounty Program (CL|BBP)</h3>
+          <p>AI-Powered Bug Bounty Hunting: From Basic to Advanced.</p>
+          <div class="course-btn-group">
+            <a href="#about" class="btn-course-green">Enroll ₹3499</a>
+            <button type="button" class="btn-course-outline" onclick="alert('Brochure download will be available shortly.')">Download Brochure</button>
+          </div>
+        </article>
+
+        <article class="course-box">
+          <div class="course-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+            </svg>
+          </div>
+          <h3>Cyber Leelawat Ethical Hacking Certified (CL|EHC)</h3>
+          <p>Professional Ethical Hacking &amp; AI-Integrated Cyber Security Program.</p>
+          <div class="course-btn-group">
+            <button type="button" class="btn-course-green" onclick="alert('Admissions for CL|EHC will open soon!')">coming soon</button>
+            <button type="button" class="btn-course-outline" onclick="alert('Brochure download will be available shortly.')">Download Brochure</button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Preserved Course Syllabus & Information from Original HTML -->
+      <div class="preserved-courses">
+        <article class="course-detail-card">
+          <div class="cert-pill" style="margin-bottom:10px"><span class="dot"></span><span>Featured Program</span></div>
+          <h3>Ethical Hacking &amp; Cybersecurity</h3>
+          <p>Build a strong foundation in cybersecurity through guided learning, practical labs and responsible, authorized security testing.</p>
+          <div class="topics">
+            <span>Networking</span><span>Linux</span><span>Web Security</span><span>OWASP Top 10</span><span>Ethical Hacking</span><span>Digital Forensics</span><span>Bug Bounty Basics</span><span>CTF Challenges</span>
+          </div>
+          <a class="btn btn-hero-primary" href="#verify">Verify a Certificate</a>
+        </article>
+
+        <article class="course-detail-card">
+          <div class="cert-pill" style="margin-bottom:10px"><span class="dot"></span><span>Practical Bootcamp</span></div>
+          <h3>Bug Bounty Bootcamp</h3>
+          <p>Learn vulnerability research fundamentals, responsible disclosure, report writing and how to practice safely on authorized targets.</p>
+          <div class="topics">
+            <span>Reconnaissance</span><span>Web Vulnerabilities</span><span>Testing Methodology</span><span>Responsible Disclosure</span><span>Report Writing</span>
+          </div>
+          <a class="btn btn-hero-outline" href="#about">Enquire Now</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATE VERIFICATION VIEW (Screenshot 6) -->
+  <section class="view verify-view" id="view-verify">
+    <div class="verify-portal-wrapper">
+      <div class="verify-portal-header">
+        <h2>Certificate Verification Portal</h2>
+        <div class="secure-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+          </svg>
+          <span>256-Bit Secure Verification</span>
+        </div>
+      </div>
+
+      <div class="verify-inner-stage">
+        <div class="verify-modal-card">
+          <div class="verify-check-circle">✓</div>
+          <h3>Certificate Verification</h3>
+          <p class="powered">System powered by Cyber Leelawat</p>
+
+          <form id="verifyForm" autocomplete="off">
+            <div class="verify-input-box">
+              <label for="certificateId">Enter Certificate ID</label>
+              <input id="certificateId" placeholder="e.g. CL/C03/09/2026" spellcheck="false" required>
+            </div>
+            <button class="btn-verify-submit" type="submit">Verify Now</button>
+          </form>
+
+          <div class="result" id="verificationResult" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS VIEW -->
+  <section class="view section-block" id="view-partners">
+    <div class="container">
+      <div class="section-header">
+        <h2>Partners</h2>
+        <p>Academic &amp; community collaborations supporting cybersecurity awareness</p>
+      </div>
+      <div class="partners-placeholder">
+        <p>Cyber Leelawat collaborates with educational institutions, schools, and colleges to conduct Cyber Awareness Programs and hands-on cybersecurity workshops.</p>
+        <a class="btn btn-hero-primary" href="#about">Partner With Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT US / CONTACT VIEW -->
+  <section class="view section-block" id="view-about">
+    <div class="container">
+      <div class="section-header">
+        <h2>About Us</h2>
+        <p>Building a safer digital world through education and awareness</p>
+      </div>
+      <div class="about-card">
+        <p><span class="brand-highlight">Cyber Leelawat</span> is an <span class="iso-inline-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 2.4 3.4-.4.9 3.3 3 1.6-.9 3.3 1.9 2.8-2.6 2.2.3 3.4-3.3.7-1.4 3.1-3.2-1-3.2 1-1.4-3.1-3.3-.7.3-3.4-2.6-2.2 1.9-2.8-.9-3.3 3-1.6.9-3.3 3.4.4L12 2zm-1.2 13.5l5.2-5.2-1.4-1.4-3.8 3.8-1.8-1.8-1.4 1.4 3.2 3.2z"/></svg> ISO 9001:2015 Certified</span> cyber education platform dedicated to empowering rural and Hindi-speaking learners. We provide industry-relevant, practical cybersecurity training that bridges the gap between classroom theory and real-world defense.</p>
+        <p>From <strong>Ethical Hacking</strong> to <strong>Bug Bounty Bootcamp</strong>, our courses are designed by experts to provide hands-on experience through live projects and internship opportunities.</p>
+        <p>Our mission goes beyond education; we actively conduct <strong>Cyber Awareness Programs</strong> across schools and colleges to build a safer, more resilient digital society for everyone.</p>
+        <p><strong>Contact:</strong> Reach out to the Cyber Leelawat team through our official channels for course admissions, internships, or school &amp; college cyber awareness workshop enquiries.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © 2026 Cyber Leelawat. All rights reserved.
+</footer>
+
+<script>
+/* Preserved Certificate Records */
+const CERTIFICATES = {
+  "CL/C03/09/2026": {name:"Mulpur Sandeep", parent:"Mulpur Samuel", course:"Capture The Flag (CTF)", issued:"31st October 2026"},
+  "CL/C03/10/2026": {name:"Yeddla Nihal", parent:"Yedla Sathyanarayana", course:"Capture The Flag (CTF)", issued:"31st October 2026"},
+  "CL/C03/11/2026": {name:"Sidda Bhuwan", parent:"Sidda Shiva Ram", course:"Capture The Flag (CTF)", issued:"31st October 2026"},
+  "CL/C03/12/2026": {name:"Karry Mohit Krishna", parent:"Karry Girish Babu", course:"Capture The Flag (CTF)", issued:"31st October 2026"},
+  "CL/C03/13/2026": {name:"Md Afshar Alam", parent:"Md Abdul Rahman", course:"Capture The Flag (CTF)", issued:"31st October 2026"},
+  "CL/C03/14/2026": {name:"Md Saif", parent:"Md Ismail", course:"Ethical Hacking", issued:"31st October 2026"},
+  "CL/C03/15/2026": {name:"P Chaitanya Likhita", parent:"P U V R Sagar", course:"Capture The Flag (CTF)", issued:"31st October 2026"}
+};
+
+/* View Routing */
+const views = ["home", "courses", "verify", "partners", "about"];
+function showView(){
+  const selected = (location.hash || "#home").slice(1);
+  const current = views.includes(selected) ? selected : "home";
+  views.forEach(v => {
+    const el = document.getElementById("view-" + v);
+    if(el) el.classList.toggle("active", v === current);
+  });
+  document.querySelectorAll("nav a").forEach(a => {
+    a.classList.toggle("active", a.dataset.view === current);
+  });
+  document.getElementById("menu").classList.remove("open");
+  document.getElementById("menuButton").setAttribute("aria-expanded", "false");
+  window.scrollTo({top: 0, behavior: "instant"});
+}
+window.addEventListener("hashchange", showView);
+showView();
+
+/* Mobile Menu */
+document.getElementById("menuButton").addEventListener("click", () => {
+  const menu = document.getElementById("menu");
+  const open = menu.classList.toggle("open");
+  document.getElementById("menuButton").setAttribute("aria-expanded", String(open));
+});
+
+/* HTML Escaping */
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[c]));
+}
+
+/* Certificate Verification Logic */
+document.getElementById("verifyForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const entered = document.getElementById("certificateId").value.trim().toUpperCase().replace(/\s+/g, "");
+  const result = document.getElementById("verificationResult");
+  const record = CERTIFICATES[entered];
+
+  if(!entered){
+    result.innerHTML = '<div class="error">Please enter a certificate ID.</div>';
+    return;
+  }
+  if(!record){
+    result.innerHTML = '<div class="error">Certificate not found. Check the ID and try again.</div>';
+    return;
+  }
+  result.innerHTML =
+    '<div class="success">✓ CERTIFICATE VERIFIED</div>' +
+    '<div class="result-row"><span>Certificate ID</span><b>' + escapeHTML(entered) + '</b></div>' +
+    '<div class="result-row"><span>Student Name</span><b>' + escapeHTML(record.name || "N/A") + '</b></div>' +
+    '<div class="result-row"><span>Parent / Guardian</span><b>' + escapeHTML(record.parent) + '</b></div>' +
+    '<div class="result-row"><span>Course / Program</span><b>' + escapeHTML(record.course) + '</b></div>' +
+    '<div class="result-row"><span>Issue Date</span><b>' + escapeHTML(record.issued) + '</b></div>' +
+    '<div class="result-row"><span>Verification Status</span><b>Verified ✓</b></div>';
+});
+
+/* Student Review Submission Logic */
+document.getElementById("reviewForm").addEventListener("submit", event => {
+  event.preventDefault();
+  document.getElementById("reviewMessage").textContent = "Thank you for sharing your feedback. Connect this form to your backend to receive submissions.";
+  event.target.reset();
+});
+
+/* Floating Glowing Particles & Connecting Dots Network */
+(function initParticles(){
+  const canvas = document.getElementById("cyberCanvas");
+  const ctx = canvas.getContext("2d");
+  let width, height, particles;
+
+  function resize(){
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    createParticles();
+  }
+
+  function createParticles(){
+    const count = Math.min(48, Math.floor((width * height) / 28000));
+    particles = [];
+    for(let i = 0; i < count; i++){
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        r: Math.random() * 2 + 1.2,
+        glow: Math.random() > 0.78
+      });
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, width, height);
+    for(let i = 0; i < particles.length; i++){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0 || p.x > width) p.vx *= -1;
+      if(p.y < 0 || p.y > height) p.vy *= -1;
+
+      for(let j = i + 1; j < particles.length; j++){
+        const p2 = particles[j];
+        const dx = p.x - p2.x;
+        const dy = p.y - p2.y;
+        const dist = Math.hypot(dx, dy);
+        if(dist < 170){
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = `rgba(69, 183, 197, ${0.12 * (1 - dist / 170)})`;
+          ctx.lineWidth = 0.7;
+          ctx.stroke();
+        }
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.glow ? "rgba(94, 234, 212, 0.75)" : "rgba(69, 183, 197, 0.35)";
+      if(p.glow){
+        ctx.shadowBlur = 14;
+        ctx.shadowColor = "rgba(94, 234, 212, 0.8)";
+      } else {
+        ctx.shadowBlur = 0;
+      }
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+  draw();
+})();
+</script>
+</body>
+</html>
